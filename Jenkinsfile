@@ -6,6 +6,7 @@ pipeline {
         /*
         Commenting multiple lines
         */
+        /*
         stage('Build') {
             agent {
                 docker {
@@ -24,6 +25,7 @@ pipeline {
                 '''
             }
         }
+        */
         stage('Test'){
             agent {
                 docker {
