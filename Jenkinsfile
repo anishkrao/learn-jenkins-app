@@ -23,12 +23,12 @@ pipeline {
                     args "--entrypoint=''"
                 }
             }
-            steps {
+                steps {
                 sh '''
                     aws --version
                 '''
             }
-            }
+            
         }
        
 
