@@ -16,20 +16,7 @@ pipeline {
             }
         }
 
-        stage('aws'){
-            agent {
-                docker {
-                    image 'amazon/aws-cli'
-                    args "--entrypoint=''"
-                }
-            }
-                steps {
-                sh '''
-                    aws --version
-                '''
-            }
-            
-        }
+        
        
 
         stage('Build') {
@@ -48,6 +35,28 @@ pipeline {
                     npm run build
                     ls -la
                 '''
+            }
+        }
+
+        stage('aws') {
+            environment {
+                AWS_S3_BUCKET = 'learn-jenkins-20240911'
+            }
+            agent {
+                docker{
+                    image 'amazon/aws-cli'
+                    args "--entrypoint=''"
+                    reuseNode true
+                }
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'my-aws-access-key', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                    sh '''
+                        aws --version
+                        aws s3 sync build s3://${AWS_S3_BUCKET}
+                    '''
+                }
+                
             }
         }
         
